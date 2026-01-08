@@ -12,6 +12,11 @@ export const LivreAPI = {
     return response.data;
   },
 
+  create: async (data: FormData) => {
+    const response = await api.post('/v1/livres', data);
+    return response.data;
+  },
+
   search: async (params: any): Promise<Book[]> => {
     const response = await api.get('/v1/livres/search', { params });
     return response.data;
