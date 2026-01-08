@@ -4,7 +4,7 @@ import BookDetails from '../pages/shared/BookDetails';
 import AllBooks from '../pages/bibliothecaire/AllBooks';
 import BiblioDashboard from '../pages/bibliothecaire/BiblioDashboard';
 import AddBook from '../pages/bibliothecaire/AddBook';
-
+import EditBook from '../pages/bibliothecaire/EditBook';
 
 const AppRoutes = () => {
   return (
@@ -15,6 +15,7 @@ const AppRoutes = () => {
         <Route path="/biblio/livres" element={<AllBooks />} />
         <Route path="/biblio" element={<BiblioDashboard />} />
         <Route path="/biblio/livres/ajouter" element={<AddBook />} />
+        <Route path="/biblio/livres/:id/modifier" element={<EditBook />} />
       </Routes>
     </BrowserRouter>
   );

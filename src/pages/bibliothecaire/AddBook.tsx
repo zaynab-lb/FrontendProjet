@@ -62,41 +62,118 @@ const AddBook = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-beige p-8">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-center mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8">
+        <h1 className="text-3xl font-bold text-center text-green-700 mb-6">
           Ajouter un livre
         </h1>
 
-        {error && <p className="text-red-600 mb-4">{error}</p>}
+        {error && <p className="text-red-600 mb-4 text-center">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input name="titre" placeholder="Titre" required onChange={handleChange} />
-          <input name="auteur" placeholder="Auteur" onChange={handleChange} />
-          <input name="genre" placeholder="Genre" onChange={handleChange} />
-          <input name="isbn" placeholder="ISBN" onChange={handleChange} />
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium mb-1">Titre</label>
+            <input
+              name="titre"
+              placeholder="Titre du livre"
+              required
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+            />
+          </div>
 
-          <input type="number" name="numPages" placeholder="Pages" onChange={handleChange} />
-          <input type="number" name="numChapters" placeholder="Chapitres" onChange={handleChange} />
-          <input type="number" name="numTotalLivres" placeholder="Total livres" onChange={handleChange} />
+          <div>
+            <label className="block text-sm font-medium mb-1">Auteur</label>
+            <input
+              name="auteur"
+              placeholder="Auteur"
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+            />
+          </div>
 
-          <textarea name="synopsis" placeholder="Synopsis" onChange={handleChange} />
+          <div>
+            <label className="block text-sm font-medium mb-1">Genre</label>
+            <input
+              name="genre"
+              placeholder="Genre"
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+            />
+          </div>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) =>
-              setFormData(prev => ({
-                ...prev,
-                image: e.target.files ? e.target.files[0] : null,
-              }))
-            }
-          />
+          <div>
+            <label className="block text-sm font-medium mb-1">ISBN</label>
+            <input
+              name="isbn"
+              placeholder="ISBN"
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Pages</label>
+              <input
+                type="number"
+                name="numPages"
+                placeholder="Pages"
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Chapitres</label>
+              <input
+                type="number"
+                name="numChapters"
+                placeholder="Chapitres"
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Total Livres</label>
+              <input
+                type="number"
+                name="numTotalLivres"
+                placeholder="Total livres"
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Synopsis</label>
+            <textarea
+              name="synopsis"
+              placeholder="Synopsis"
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setFormData(prev => ({
+                  ...prev,
+                  image: e.target.files ? e.target.files[0] : null,
+                }))
+              }
+              className="w-full text-sm text-gray-600"
+            />
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-600 text-white py-3 rounded-lg"
+            className="w-full py-3 bg-green-600 text-white font-bold rounded-xl hover:bg-green-500 transition-all duration-200"
           >
             {loading ? "Ajout en cours..." : "Ajouter le livre"}
           </button>
@@ -104,7 +181,7 @@ const AddBook = () => {
 
         <button
           onClick={() => navigate(-1)}
-          className="mt-4 text-brown-700 hover:underline"
+          className="mt-4 w-full py-2 text-green-700 font-medium hover:underline"
         >
           ← Retour
         </button>

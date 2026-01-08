@@ -21,4 +21,9 @@ export const LivreAPI = {
     const response = await api.get('/v1/livres/search', { params });
     return response.data;
   },
+  update: (id: number, data: FormData) =>
+  api.put(`/v1/livres/${id}`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
+
 };
