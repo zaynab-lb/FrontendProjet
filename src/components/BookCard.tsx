@@ -13,12 +13,13 @@ const BookCard = ({ book }: Props) => {
   return (
     <div className="bg-brown-500 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-transform overflow-hidden">
       {book.image && (
-        <img
-          src={`${BACKEND_URL}${book.image}`}
-          alt={book.titre}
-          className="w-full h-52 object-cover border-b"
-        />
-      )}
+  <img
+    src={book.image}
+    alt={book.titre}
+    className="w-full h-52 object-cover"
+  />
+)}
+
 
       <div className="p-4 bg-brown-100">
         <h3 className="text-brown-900 font-bold text-lg mb-2">{book.titre}</h3>

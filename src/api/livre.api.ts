@@ -26,4 +26,8 @@ export const LivreAPI = {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
 
+  delete: async (id: number): Promise<void> => {
+  await api.delete(`/v1/livres/${id}`);
+},
+
 };

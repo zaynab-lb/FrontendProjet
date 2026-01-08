@@ -40,12 +40,13 @@ const BookDetails = () => {
 
       <div className="bg-white rounded-2xl shadow-lg p-6 flex flex-col md:flex-row gap-6">
         {book.image && (
-          <img
-            src={`${BACKEND_URL}${book.image}`}
-            alt={book.titre}
-            className="w-full md:w-64 h-80 object-cover rounded-lg"
-          />
-        )}
+  <img
+    src={book.image}
+    alt={book.titre}
+    className="w-full md:w-64 h-80 object-cover rounded-lg"
+  />
+)}
+
 
         <div>
           <h1 className="text-3xl font-bold text-brown-800 mb-4">
