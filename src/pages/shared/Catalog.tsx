@@ -24,9 +24,9 @@ const Catalog = () => {
     fetchBooks();
   }, []);
 
-  const handleDetails = (book: Book) => {
+  /*const handleDetails = (book: Book) => {
     alert(`Détails du livre :\n${book.titre}\nAuteur: ${book.auteur}`);
-  };
+  };*/
 
   if (loading) return <p className="text-center mt-10 text-brown-700 font-medium">Chargement...</p>;
   if (error) return <p className="text-center mt-10 text-red-600">{error}</p>;

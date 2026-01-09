@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { LivreAPI } from '../../api/livre.api';
 import { Book } from '../../types/Book';
 
-const BACKEND_URL = 'http://localhost:8080';
+//const BACKEND_URL = 'http://localhost:8080';
 
 const BookDetails = () => {
   const { id } = useParams();
