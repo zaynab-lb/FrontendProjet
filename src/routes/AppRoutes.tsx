@@ -12,6 +12,8 @@ import LecteurDashboard from "../pages/lecteur/LecteurDashboard";
 import RegisterLecteur from "../pages/shared/Register";
 import UserManagement from "../pages/admin/UserManagement";
 import CreateUser from "../pages/admin/CreateUser";
+import EditUser from "../pages/admin/EditUser";
+
 
 
 
@@ -93,6 +95,16 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/admin/users/:role/:id/edit"
+        element={
+          <ProtectedRoute roles={["ADMIN"]}>
+            <EditUser />
+          </ProtectedRoute>
+        }
+      />
+
 
     </Routes>
   );

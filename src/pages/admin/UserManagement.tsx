@@ -38,6 +38,7 @@ const UserManagement = () => {
             <th className="border p-2">Email</th>
             <th className="border p-2">Rôle</th>
             <th className="border p-2">Créé le</th>
+            <th className="border p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -52,6 +53,14 @@ const UserManagement = () => {
                   ? new Date(u.created_at).toLocaleDateString()
                   : "-"}
               </td>
+              <td className="border p-2">
+                <Link
+                    to={`/admin/users/${u.role.toLowerCase()}/${u.id}/edit`}
+                    className="text-blue-600 underline"
+                >
+                    Modifier
+                </Link>
+               </td>
             </tr>
           ))}
         </tbody>

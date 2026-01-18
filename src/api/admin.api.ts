@@ -56,4 +56,30 @@ export const AdminAPI = {
         throw new Error("Rôle invalide");
     }
   },
+
+    updateUser: async (
+    userId: string,
+    role: "ADMIN" | "BIBLIOTHECAIRE" | "LECTEUR",
+    data: {
+      nom: string;
+      prenom: string;
+      email: string;
+      password?: string;
+    }
+  ) => {
+    switch (role) {
+      case "ADMIN":
+        return apiAdmin.put(`/v1/admins/${userId}`, data);
+
+      case "BIBLIOTHECAIRE":
+        return apiBiblio.put(`/v1/bibliothecaires/${userId}`, data);
+
+      case "LECTEUR":
+        return apiLecteur.put(`/v1/lecteurs/${userId}`, data);
+
+      default:
+        throw new Error("Rôle invalide");
+    }
+  },
+
 };
