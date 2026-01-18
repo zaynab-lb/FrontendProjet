@@ -36,6 +36,7 @@ const UserManagement = () => {
             <th className="border p-2">Nom</th>
             <th className="border p-2">Prénom</th>
             <th className="border p-2">Email</th>
+            <th className="border p-2">Date de naissance</th>
             <th className="border p-2">Rôle</th>
             <th className="border p-2">Créé le</th>
             <th className="border p-2">Actions</th>
@@ -47,6 +48,11 @@ const UserManagement = () => {
               <td className="border p-2">{u.nom}</td>
               <td className="border p-2">{u.prenom}</td>
               <td className="border p-2">{u.email}</td>
+              <td className="border p-2">
+                {u.date_naissance
+                    ? new Date(u.date_naissance).toLocaleDateString()
+                    : "-"}
+              </td>
               <td className="border p-2 font-semibold">{u.role}</td>
               <td className="border p-2">
                 {u.created_at

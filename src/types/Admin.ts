@@ -4,6 +4,7 @@ export interface Admin {
   prenom: string;
   email: string;
   role: "ADMIN";
+  date_naissance: string;
   created_at?: string;
   updated_at?: string;
 }

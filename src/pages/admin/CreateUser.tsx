@@ -10,6 +10,7 @@ const CreateUser = () => {
     prenom: "",
     email: "",
     password: "",
+    date_naissance: "",
     role: "LECTEUR",
   });
 
@@ -67,6 +68,14 @@ const CreateUser = () => {
           onChange={handleChange}
           className="w-full border p-2"
           required
+        />
+
+        <input
+            type="date"
+            name="date_naissance"
+            onChange={handleChange}
+            className="w-full border p-2"
+            required
         />
 
         <select

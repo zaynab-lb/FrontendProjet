@@ -6,4 +6,5 @@ export interface CreateUserDTO {
   email: string;
   password: string;
   role: CreateUserRole;
+  date_naissance: string;
 }

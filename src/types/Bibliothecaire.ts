@@ -4,6 +4,7 @@ export interface Bibliothecaire {
   prenom: string;
   email: string;
   role: "BIBLIOTHECAIRE";
+  date_naissance: string;
   created_at?: string;
   updated_at?: string;
 }
