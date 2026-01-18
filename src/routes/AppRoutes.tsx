@@ -9,6 +9,8 @@ import ProtectedRoute from "../auth/ProtectedRoute";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import Catalog from "../pages/shared/Catalog";
 import LecteurDashboard from "../pages/lecteur/LecteurDashboard";
+import RegisterLecteur from "../pages/shared/Register";
+
 
 const AppRoutes = () => {
   return (
@@ -17,6 +19,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Catalog />} />
       <Route path="/livres/:id" element={<BookDetails />} />
+      <Route path="/register" element={<RegisterLecteur />} />
 
       {/* LECTEUR (SÉCURISÉ) */}
       <Route
