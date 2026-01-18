@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
   return (
@@ -9,6 +10,13 @@ const AdminDashboard = () => {
       <div className="border p-4 mb-4">
         <span className="font-medium">Nom de l'utilisateur :</span> Admin
       </div>
+
+      <Link
+        to="/admin/users"
+        className="text-blue-600 underline"
+      >
+        Gérer les utilisateurs
+      </Link>
     </div>
   );
 };

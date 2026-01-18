@@ -10,6 +10,9 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import Catalog from "../pages/shared/Catalog";
 import LecteurDashboard from "../pages/lecteur/LecteurDashboard";
 import RegisterLecteur from "../pages/shared/Register";
+import UserManagement from "../pages/admin/UserManagement";
+import CreateUser from "../pages/admin/CreateUser";
+
 
 
 const AppRoutes = () => {
@@ -74,6 +77,23 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+      path="/admin/users"
+      element={
+        <ProtectedRoute roles={["ADMIN"]}>
+          <UserManagement />
+        </ProtectedRoute>
+      }
+      />
+      <Route
+        path="/admin/users/create"
+        element={
+          <ProtectedRoute roles={["ADMIN"]}>
+            <CreateUser />
+          </ProtectedRoute>
+        }
+      />
+
     </Routes>
   );
 };
