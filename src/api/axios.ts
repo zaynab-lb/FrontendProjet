@@ -31,7 +31,7 @@ export const apiAdmin = axios.create({
 
 // Service prêt
 export const apiPret = axios.create({
-  baseURL: "http://localhost:8888/PRET-SERVICE",
+  baseURL: "http://localhost:8888/PRETE-SERVICE",
 });
 
 /* ===========================

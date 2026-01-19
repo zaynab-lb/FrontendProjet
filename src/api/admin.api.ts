@@ -1,7 +1,7 @@
 import { apiAdmin, apiLecteur, apiBiblio } from "./axios";
 import { User } from "../types/User";
 import { CreateUserDTO } from "../types/CreateUser";
-import { Admin } from "../types/admin";
+import { Admin } from "../types/Admin";
 import { Lecteur } from "../types/Lecteur";
 import { Bibliothecaire } from "../types/Bibliothecaire";
 
@@ -151,6 +151,25 @@ getUserById: async (
         role: "LECTEUR",
       };
     }
+
+    default:
+      throw new Error("Rôle invalide");
+  }
+},
+
+deleteUser: async (
+  id: string,
+  role: "ADMIN" | "BIBLIOTHECAIRE" | "LECTEUR"
+) => {
+  switch (role) {
+    case "ADMIN":
+      return apiAdmin.delete(`/v1/admins/${id}`);
+
+    case "BIBLIOTHECAIRE":
+      return apiBiblio.delete(`/v1/bibliothecaires/${id}`);
+
+    case "LECTEUR":
+      return apiLecteur.delete(`/v1/lecteurs/${id}`);
 
     default:
       throw new Error("Rôle invalide");

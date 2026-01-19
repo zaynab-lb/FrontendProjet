@@ -13,6 +13,7 @@ import RegisterLecteur from "../pages/shared/Register";
 import UserManagement from "../pages/admin/UserManagement";
 import CreateUser from "../pages/admin/CreateUser";
 import EditUser from "../pages/admin/EditUser";
+import MesDemandes from "../pages/lecteur/MesDemandes";
 
 
 
@@ -32,6 +33,15 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute roles={["LECTEUR"]}>
             <LecteurDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/lecteur/mes-demandes"
+        element={
+          <ProtectedRoute roles={["LECTEUR"]}>
+            <MesDemandes />
           </ProtectedRoute>
         }
       />

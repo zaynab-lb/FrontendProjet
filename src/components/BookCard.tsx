@@ -5,8 +5,6 @@ interface Props {
   book: Book;
 }
 
-//const BACKEND_URL = 'http://localhost:8080';
-
 const BookCard = ({ book }: Props) => {
   const navigate = useNavigate();
 
