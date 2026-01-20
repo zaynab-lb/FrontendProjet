@@ -18,6 +18,7 @@ import GestionDemandes from "../pages/bibliothecaire/PretManagement";
 import PretesActifsBiblio from "../pages/bibliothecaire/PretesActifsBiblio";
 import ProlongerPrete from "../pages/bibliothecaire/ProlongerPrete";
 import HistoriquePretesBiblio from "../pages/bibliothecaire/HistoriquePretesBiblio";
+import MesPretes from "../pages/lecteur/MesPretes";
 
 
 
@@ -45,6 +46,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute roles={["LECTEUR"]}>
             <MesDemandes />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/lecteur/mes-prets"
+        element={
+          <ProtectedRoute roles={["LECTEUR"]}>
+            <MesPretes />
           </ProtectedRoute>
         }
       />

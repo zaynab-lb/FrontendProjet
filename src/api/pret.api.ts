@@ -99,6 +99,23 @@ getHistoriquePretesBiblio: async (): Promise<Prete[]> => {
   }));
 },
 
+// frontend/src/api/pret.api.ts
+getUserPretes: async (): Promise<Prete[]> => {
+  const res = await apiPret.get("/v1/pretes/lecteurs/historique");
+  return res.data.map((d: any) => ({
+    idPret: d.idPret,
+    titre: d.titre,
+    description: d.description,
+    datePret: d.datePret ? new Date(d.datePret).toISOString() : new Date().toISOString(),
+    dateFinPret: d.dateFinPret ? new Date(d.dateFinPret).toISOString() : undefined,
+    livreRetourne: d.livreRetourne,
+    demande: d.demande,
+    idLivre: d.idLivre,
+    livre: d.livre,
+    user_id: d.user_id,
+  }));
+},
+
 
 };
 

@@ -26,6 +26,14 @@ const LecteurDashboard = () => {
           📝 Mes demandes
         </Link>
 
+        <Link
+          to="/lecteur/mes-prets"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-max"
+        >
+          📖 Mes prêts
+        </Link>
+
+
         {/* tu peux ajouter d'autres liens ici */}
       </div>
     </div>

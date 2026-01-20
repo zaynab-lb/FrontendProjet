@@ -7,7 +7,7 @@ export interface Prete {
   titre: string;
   description?: string;
 
-  datePret?: string;  
+  datePret: string;  
   dateFinPret?: string;
 
   livreRetourne?: boolean;
