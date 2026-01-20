@@ -31,6 +31,8 @@ export const PretAPI = {
     }));
   },
 
+  
+
   annulerDemande: async (idPret: number): Promise<void> => {
     try {
       await apiPret.delete(`/v1/pretes/lecteurs/demandes/${idPret}`);
@@ -39,6 +41,65 @@ export const PretAPI = {
       throw new Error("Impossible d'annuler la demande"); 
     }
   },
+
+   getDemandesBiblio: async (): Promise<Prete[]> => {
+    const res = await apiPret.get("/v1/pretes/demandes");
+    return res.data;
+  },
+
+
+  accepterDemande: async (idPret: number): Promise<Prete> => {
+    const res = await apiPret.put(`/v1/pretes/demandes/${idPret}/accepter`);
+    return res.data;
+  },
+
+  rejeterDemande: async (idPret: number): Promise<void> => {
+    await apiPret.delete(`/v1/pretes/demandes/${idPret}/rejeter`);
+  },
+
+  getPretesActifsBiblio: async (): Promise<Prete[]> => {
+  const res = await apiPret.get("/v1/pretes/actifs");
+
+  return res.data.map((p: any) => ({
+    idPret: p.idPret || p.id_pret,
+    datePret: p.datePret || p.date_pret,
+    dateFinPret: p.dateFinPret || p.date_fin_pret,
+    livreRetourne: p.livreRetourne || p.livre_retourne,
+    demande: p.demande,
+    livre: p.livre,
+    lecteur: p.lecteur,
+  }));
+},
+
+retournerLivre: async (idPret: number) => {
+  return apiPret.put(`/v1/pretes/${idPret}/retourner`);
+},
+
+prolongerPrete: async (idPret: number, newDateFinPret: string) => {
+  return apiPret.put(
+    `/v1/pretes/${idPret}/prolonger`,
+    null,
+    {
+      params: { newDateFinPret }
+    }
+  );
+},
+
+getHistoriquePretesBiblio: async (): Promise<Prete[]> => {
+  const res = await apiPret.get("/v1/pretes");
+
+  return res.data.map((p: any) => ({
+    idPret: p.idPret,
+    datePret: p.datePret,
+    dateFinPret: p.dateFinPret,
+    livreRetourne: p.livreRetourne,
+    demande: p.demande,
+    livre: p.livre,
+    lecteur: p.lecteur,
+  }));
+},
+
+
 };
 
 

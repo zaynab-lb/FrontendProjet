@@ -2,7 +2,7 @@ import { Book } from "./Book";
 import { Lecteur } from "./Lecteur";
 
 export interface Prete {
-  idPret?: number;
+  idPret: number;
 
   titre: string;
   description?: string;
