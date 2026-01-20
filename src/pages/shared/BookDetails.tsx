@@ -37,9 +37,9 @@ const BookDetails = () => {
 
   const demande: Prete = {
     titre: `Demande du livre ${book?.titre}`,
-    description: "Demande effectuée par le lecteur",
-    idLecteur: user.id, 
+    description: "Demande effectuée par le lecteur", 
     idLivre: book!.idLivre,
+    user_id: user.id,
     demande: true,
     livreRetourne: false,
   };

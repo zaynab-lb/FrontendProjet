@@ -13,7 +13,7 @@ export interface Prete {
   livreRetourne?: boolean;
   demande?: boolean;
 
-  idLecteur: string;
+  user_id?: string; 
   idLivre: number;
 
   livre?: Book;

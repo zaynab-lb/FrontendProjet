@@ -1,22 +1,36 @@
 import { useEffect, useState } from "react";
 import { PretAPI } from "../../api/pret.api";
 import { Prete } from "../../types/Pret";
+import { useAuth } from "../../auth/AuthContext";
 
 const MesDemandes = () => {
+  const { user } = useAuth();
   const [demandes, setDemandes] = useState<Prete[]>([]);
-  const idLecteur = localStorage.getItem("user_id")!;
+  //const idLecteur = localStorage.getItem("user_id")!;
 
-  useEffect(() => {
-    PretAPI.getDemandesLecteur(idLecteur)
-      .then(setDemandes)
-      .catch(console.error);
-  }, [idLecteur]);
+   useEffect(() => {
+  if (!user) return;
 
-  const annuler = async (idPret?: number) => {
-    if (!idPret) return;
-    await PretAPI.annulerDemande(idLecteur, idPret);
-    setDemandes(demandes.filter(d => d.idPret !== idPret));
-  };
+  PretAPI.getDemandesLecteur()
+    .then(setDemandes)
+    .catch(console.error);
+}, [user]);
+
+const annuler = async (idPret?: number) => {
+  if (!idPret) return;
+
+  try {
+    await PretAPI.annulerDemande(idPret);
+    setDemandes(prev =>
+      prev.filter(d => String(d.idPret) !== String(idPret))
+    );
+    alert("Demande annulée avec succès !");
+  } catch (err: any) {
+    alert(err.message || "Impossible d'annuler la demande");
+  }
+};
+
+
 
   return (
     <div>
@@ -44,11 +58,10 @@ const MesDemandes = () => {
               <tr key={d.idPret}>
                 <td>{d.livre?.titre}</td>
 
-                <td>
-                  {d.datePret
-                    ? new Date(d.datePret).toLocaleDateString()
-                    : "—"}
+               <td>
+                  {d.datePret ? new Date(d.datePret).toLocaleDateString() : "—"}
                 </td>
+
 
                 <td>
                   {d.demande ? "En attente" : "Traitée"}

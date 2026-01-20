@@ -1,8 +1,14 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { apiSecurity } from "../api/axios";
 
+type User = {
+  id: string;
+  role: string;
+  email?: string;
+};
+
 type AuthContextType = {
-  user: { id: string; role: string; email?: string } | null;
+  user: User | null;
   login: (email: string, password: string, role: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -11,48 +17,41 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>(null!);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<{ id: string; role: string; email?: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  // Login
+  // LOGIN
   const login = async (email: string, password: string, role: string) => {
-    try {
-      const res = await apiSecurity.post("/login", { email, password, role });
+    const res = await apiSecurity.post("/login", { email, password, role });
 
-      // Stocker tokens et rôle
-      localStorage.setItem("access_token", res.data.access_token);
-      localStorage.setItem("refresh_token", res.data.refresh_token);
-      localStorage.setItem("role", role);
-      localStorage.setItem("user_id", res.data.idLecteur); // <-- ID du lecteur
+    const { access_token, refresh_token, userId } = res.data;
 
-      // Mettre à jour le state user
-      setUser({
-        id: res.data.idLecteur,
-        role,
-        email,
-      });
-    } catch (err: any) {
-      console.error(err.response || err);
-      throw new Error("Identifiants invalides");
-    }
+    // ✅ stockage clean
+    localStorage.setItem("access_token", access_token);
+    localStorage.setItem("refresh_token", refresh_token);
+    localStorage.setItem("role", role);
+    localStorage.setItem("user_id", userId);
+
+    setUser({
+      id: userId,
+      role,
+      email,
+    });
   };
 
-  // Logout
+  // LOGOUT
   const logout = () => {
     localStorage.clear();
     setUser(null);
   };
 
-  // Restaurer l'utilisateur au refresh
+  // RESTORE SESSION
   useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
+    const token = localStorage.getItem("access_token");
     const role = localStorage.getItem("role");
-    const idLecteur = localStorage.getItem("user_id");
+    const id = localStorage.getItem("user_id");
 
-    if (accessToken && role && idLecteur) {
-      setUser({
-        id: idLecteur,
-        role,
-      });
+    if (token && role && id) {
+      setUser({ id, role });
     }
   }, []);
 
