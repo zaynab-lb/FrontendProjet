@@ -19,33 +19,37 @@ const EditUser = () => {
     role: "LECTEUR",
   });
 
- useEffect(() => {
-  if (!id || !role) return;
+  const [error, setError] = useState<string>(""); // 🔹 Gestion des erreurs
 
-  const fetchUser = async () => {
-    try {
-      const user = await AdminAPI.getUserById(
-        id,
-        role.toUpperCase() as any
-      );
-
-      setForm({
-        nom: user.nom || "",
-        prenom: user.prenom || "",
-        email: user.email || "",
-        password: "",
-        date_naissance: user.date_naissance || "",
-        role: user.role,
-      });
-    } catch {
-      alert("Impossible de charger l'utilisateur");
-      navigate("/admin/users");
+  useEffect(() => {
+    if (!id || !role) {
+      setError("Utilisateur invalide ou ID manquant");
+      return;
     }
-  };
 
-  fetchUser();
-}, [id, role, navigate]);
+    const fetchUser = async () => {
+      try {
+        const user = await AdminAPI.getUserById(
+          id,
+          role.toUpperCase() as any
+        );
 
+        setForm({
+          nom: user.nom || "",
+          prenom: user.prenom || "",
+          email: user.email || "",
+          password: "",
+          date_naissance: user.date_naissance || "",
+          role: user.role,
+        });
+      } catch {
+        setError("Impossible de charger l'utilisateur");
+        navigate("/admin/users");
+      }
+    };
+
+    fetchUser();
+  }, [id, role, navigate]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -55,46 +59,51 @@ const EditUser = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const currentRole = role!.toUpperCase() as
-      | "ADMIN"
-      | "BIBLIOTHECAIRE"
-      | "LECTEUR";
+    try {
+      const currentRole = role!.toUpperCase() as
+        | "ADMIN"
+        | "BIBLIOTHECAIRE"
+        | "LECTEUR";
 
-    if (form.role !== currentRole) {
-      // 🔁 changement de rôle
-      await AdminAPI.changeUserRole({
-        id: id!,
-        oldRole: currentRole,
-        newRole: form.role as any,
-        nom: form.nom,
-        prenom: form.prenom,
-        email: form.email,
-        date_naissance: form.date_naissance,
-        password: form.password,
-      });
-    } else {
-      // simple update
-      await AdminAPI.updateUser(
-        id!,
-        currentRole,
-        {
+      if (form.role !== currentRole) {
+        // 🔁 Changement de rôle
+        await AdminAPI.changeUserRole({
+          id: id!,
+          oldRole: currentRole,
+          newRole: form.role as any,
           nom: form.nom,
           prenom: form.prenom,
           email: form.email,
           date_naissance: form.date_naissance,
-          password: form.password || undefined,
-        }
-      );
-    }
+          password: form.password,
+        });
+      } else {
+        // simple update
+        await AdminAPI.updateUser(
+          id!,
+          currentRole,
+          {
+            nom: form.nom,
+            prenom: form.prenom,
+            email: form.email,
+            date_naissance: form.date_naissance,
+            password: form.password || undefined,
+          }
+        );
+      }
 
-    navigate("/admin/users");
-  } catch {
-    alert("Erreur lors de la modification");
+      navigate("/admin/users");
+    } catch {
+      alert("Erreur lors de la modification");
+    }
+  };
+
+  // 🔹 Affichage de l'erreur si id/role invalide ou fetch échoue
+  if (error) {
+    return <p className="p-6 text-red-600">{error}</p>;
   }
-};
 
   return (
     <div className="p-6 max-w-lg mx-auto">
@@ -134,24 +143,23 @@ const EditUser = () => {
         />
 
         <input
-            type="date"
-            name="date_naissance"
-            value={form.date_naissance}
-            onChange={handleChange}
-            className="w-full border p-2"
+          type="date"
+          name="date_naissance"
+          value={form.date_naissance}
+          onChange={handleChange}
+          className="w-full border p-2"
         />
 
         <select
-            name="role"
-            value={form.role}
-            onChange={handleChange}
-            className="w-full border p-2"
-            >
-            <option value="LECTEUR">Lecteur</option>
-            <option value="BIBLIOTHECAIRE">Bibliothécaire</option>
-            <option value="ADMIN">Admin</option>
+          name="role"
+          value={form.role}
+          onChange={handleChange}
+          className="w-full border p-2"
+        >
+          <option value="LECTEUR">Lecteur</option>
+          <option value="BIBLIOTHECAIRE">Bibliothécaire</option>
+          <option value="ADMIN">Admin</option>
         </select>
-
 
         <button
           type="submit"
