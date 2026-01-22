@@ -6,6 +6,18 @@ export type PretStatusCode =
   | "RETARD"
   | "RETOURNE";
 
+export function computePretStatut(d: any) {
+  const demande = d.demande ?? false;
+  const livreRetourne = d.livreRetourne ?? d.livre_retourne ?? false;
+
+  if (demande === true) return "EN_ATTENTE";
+  if (demande === false && livreRetourne === true) return "RETOURNE";
+  if (demande === false) return "ACCEPTE";
+
+  return "REFUSE";
+}
+
+
 export const getPretStatus = (p: Prete): {
   code: PretStatusCode;
   label: string;

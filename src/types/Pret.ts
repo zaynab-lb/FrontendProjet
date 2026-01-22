@@ -1,6 +1,13 @@
 import { Book } from "./Book";
 import { Lecteur } from "./Lecteur";
 
+export type PretStatut =
+  | "EN_ATTENTE"
+  | "ACCEPTE"
+  | "REFUSE"
+  | "RETOURNE";
+
+
 export interface Prete {
   idPret: number;
 
@@ -15,6 +22,8 @@ export interface Prete {
 
   user_id?: string; 
   idLivre: number;
+
+  statut: PretStatut; 
 
   livre?: Book;
   lecteur?: Lecteur;

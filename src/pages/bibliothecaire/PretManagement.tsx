@@ -14,7 +14,7 @@ const PretManagement = () => {
   const fetchDemandes = async () => {
     try {
       setLoading(true);
-      const res = await PretAPI.getDemandesLecteur();
+      const res = await PretAPI.getDemandesBiblio();
       setDemandes(res);
       setError(null);
     } catch (err: any) {
@@ -25,11 +25,8 @@ const PretManagement = () => {
     }
   };
 
-  useEffect(() => {
-    PretAPI.getDemandesBiblio()
-      .then(setDemandes)
-      .catch(() => setError("Impossible de charger les demandes"))
-      .finally(() => setLoading(false));
+ useEffect(() => {
+    fetchDemandes();
   }, []);
 
   // Accepter une demande
@@ -38,12 +35,11 @@ const PretManagement = () => {
 
     try {
       await PretAPI.accepterDemande(idPret);
-      fetchDemandes();
+      fetchDemandes(); 
     } catch (err: any) {
       const message =
         err?.response?.data?.message ||
         "Impossible d'accepter la demande";
-
       setError(message);
     }
   };
@@ -54,27 +50,25 @@ const PretManagement = () => {
 
     try {
       await PretAPI.rejeterDemande(idPret);
-      fetchDemandes();
+      fetchDemandes(); 
     } catch (err: any) {
       const message =
         err?.response?.data?.message ||
         "Impossible de rejeter la demande";
-
       setError(message);
     }
   };
 
   // Get status color
-  const getStatusColor = (status: string) => {
+ const getStatusColor = (status: string) => {
     switch (status) {
-      case 'EN_ATTENTE': return '#FFD166';
-      case 'ACCEPTE': return '#4CAF50';
-      case 'REFUSE': return '#FF6B6B';
-      case 'RETOURNE': return '#2196F3';
-      default: return '#9C5149';
+      case "EN_ATTENTE": return "#FFD166";
+      case "ACCEPTE": return "#4CAF50";
+      case "REFUSE": return "#FF6B6B";
+      case "RETOURNE": return "#2196F3";
+      default: return "#9C5149";
     }
   };
-
   const filteredDemandes = demandes.filter((demande) => {
     const matchesSearch = 
       demande.livre?.titre?.toLowerCase().includes(searchTerm.toLowerCase()) ||

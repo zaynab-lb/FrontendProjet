@@ -1,5 +1,6 @@
 import { apiPret } from "./axios";
 import { Prete } from "../types/Pret";
+import { computePretStatut } from "../utils/pretStatus";
 
 
 export const PretAPI = {
@@ -22,6 +23,7 @@ export const PretAPI = {
                    undefined,
       demande: d.demande,
       livreRetourne: d.livreRetourne || d.livre_retourne,
+      statut: computePretStatut(d),
       user_id: d.userId || d.user_id,
       idLivre: d.idLivre || d.id_livre,
       livre: { 
@@ -44,7 +46,18 @@ export const PretAPI = {
 
    getDemandesBiblio: async (): Promise<Prete[]> => {
     const res = await apiPret.get("/v1/pretes/demandes");
-    return res.data;
+     return res.data.map((d: any) => ({
+    ...d,
+    idPret: d.idPret || d.id_pret,
+    datePret: d.datePret || d.date_pret,
+    livreRetourne: d.livreRetourne || d.livre_retourne,
+    demande: d.demande,
+
+    statut: computePretStatut({
+  demande: d.demande,
+  livreRetourne: d.livreRetourne || d.livre_retourne,
+}),
+  }));
   },
 
 
@@ -66,6 +79,7 @@ export const PretAPI = {
     dateFinPret: p.dateFinPret || p.date_fin_pret,
     livreRetourne: p.livreRetourne || p.livre_retourne,
     demande: p.demande,
+    statut: computePretStatut(p),
     livre: p.livre,
     lecteur: p.lecteur,
   }));
@@ -94,6 +108,7 @@ getHistoriquePretesBiblio: async (): Promise<Prete[]> => {
     dateFinPret: p.dateFinPret,
     livreRetourne: p.livreRetourne,
     demande: p.demande,
+    statut: computePretStatut(p),
     livre: p.livre,
     lecteur: p.lecteur,
   }));
@@ -110,6 +125,7 @@ getUserPretes: async (): Promise<Prete[]> => {
     dateFinPret: d.dateFinPret ? new Date(d.dateFinPret).toISOString() : undefined,
     livreRetourne: d.livreRetourne,
     demande: d.demande,
+    statut: computePretStatut(d),
     idLivre: d.idLivre,
     livre: d.livre,
     user_id: d.user_id,
