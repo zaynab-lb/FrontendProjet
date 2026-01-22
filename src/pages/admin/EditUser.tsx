@@ -3,11 +3,7 @@ import { AdminAPI } from "../../api/admin.api";
 import { useNavigate, useParams } from "react-router-dom";
 
 const EditUser = () => {
-  const { id, role } = useParams<{
-    id: string;
-    role: "admin" | "bibliothecaire" | "lecteur";
-  }>();
-
+  const { id, role } = useParams<{ id: string; role: "admin" | "bibliothecaire" | "lecteur" }>();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -18,8 +14,7 @@ const EditUser = () => {
     date_naissance: "",
     role: "LECTEUR",
   });
-
-  const [error, setError] = useState<string>(""); // 🔹 Gestion des erreurs
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (!id || !role) {
@@ -29,11 +24,11 @@ const EditUser = () => {
 
     const fetchUser = async () => {
       try {
-        const user = await AdminAPI.getUserById(
-          id,
-          role.toUpperCase() as any
-        );
-
+        const user = await AdminAPI.getUserById(id, role.toUpperCase() as any);
+        if (!user || !user.id) {
+          setError("Utilisateur introuvable");
+          return;
+        }
         setForm({
           nom: user.nom || "",
           prenom: user.prenom || "",
@@ -51,24 +46,16 @@ const EditUser = () => {
     fetchUser();
   }, [id, role, navigate]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      const currentRole = role!.toUpperCase() as
-        | "ADMIN"
-        | "BIBLIOTHECAIRE"
-        | "LECTEUR";
-
+      const currentRole = role!.toUpperCase() as "ADMIN" | "BIBLIOTHECAIRE" | "LECTEUR";
       if (form.role !== currentRole) {
-        // 🔁 Changement de rôle
         await AdminAPI.changeUserRole({
           id: id!,
           oldRole: currentRole,
@@ -80,93 +67,37 @@ const EditUser = () => {
           password: form.password,
         });
       } else {
-        // simple update
-        await AdminAPI.updateUser(
-          id!,
-          currentRole,
-          {
-            nom: form.nom,
-            prenom: form.prenom,
-            email: form.email,
-            date_naissance: form.date_naissance,
-            password: form.password || undefined,
-          }
-        );
+        await AdminAPI.updateUser(id!, currentRole, {
+          nom: form.nom,
+          prenom: form.prenom,
+          email: form.email,
+          date_naissance: form.date_naissance,
+          password: form.password || undefined,
+        });
       }
-
       navigate("/admin/users");
     } catch {
       alert("Erreur lors de la modification");
     }
   };
 
-  // 🔹 Affichage de l'erreur si id/role invalide ou fetch échoue
-  if (error) {
-    return <p className="p-6 text-red-600">{error}</p>;
-  }
+  if (error) return <p className="p-6 text-red-600">{error}</p>;
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-4">
-        Modifier l'utilisateur
-      </h1>
-
+      <h1 className="text-2xl font-bold mb-4">Modifier l'utilisateur</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="nom"
-          value={form.nom}
-          onChange={handleChange}
-          className="w-full border p-2"
-        />
-
-        <input
-          name="prenom"
-          value={form.prenom}
-          onChange={handleChange}
-          className="w-full border p-2"
-        />
-
-        <input
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full border p-2"
-        />
-
-        <input
-          name="password"
-          type="password"
-          placeholder="Nouveau mot de passe (optionnel)"
-          onChange={handleChange}
-          className="w-full border p-2"
-        />
-
-        <input
-          type="date"
-          name="date_naissance"
-          value={form.date_naissance}
-          onChange={handleChange}
-          className="w-full border p-2"
-        />
-
-        <select
-          name="role"
-          value={form.role}
-          onChange={handleChange}
-          className="w-full border p-2"
-        >
+        <input name="nom" value={form.nom} onChange={handleChange} className="w-full border p-2" />
+        <input name="prenom" value={form.prenom} onChange={handleChange} className="w-full border p-2" />
+        <input name="email" type="email" value={form.email} onChange={handleChange} className="w-full border p-2" />
+        <input name="password" type="password" placeholder="Nouveau mot de passe (optionnel)" onChange={handleChange} className="w-full border p-2" />
+        <input type="date" name="date_naissance" value={form.date_naissance} onChange={handleChange} className="w-full border p-2" />
+        <select name="role" value={form.role} onChange={handleChange} className="w-full border p-2">
           <option value="LECTEUR">Lecteur</option>
           <option value="BIBLIOTHECAIRE">Bibliothécaire</option>
           <option value="ADMIN">Admin</option>
         </select>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded"
-        >
-          Enregistrer
-        </button>
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">Enregistrer</button>
       </form>
     </div>
   );

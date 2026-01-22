@@ -1,52 +1,76 @@
 import { apiAdmin, apiLecteur, apiBiblio } from "./axios";
 import { User } from "../types/User";
 import { CreateUserDTO } from "../types/CreateUser";
-import { Admin } from "../types/Admin";
-import { Lecteur } from "../types/Lecteur";
-import { Bibliothecaire } from "../types/Bibliothecaire";
 
 export const AdminAPI = {
   getAllUsers: async (): Promise<User[]> => {
     const [adminsRes, lecteursRes, bibliosRes] = await Promise.all([
-      apiAdmin.get<Admin[]>("/v1/admins/"),
-      apiLecteur.get<Lecteur[]>("/v1/lecteurs/"),
-      apiBiblio.get<Bibliothecaire[]>("/v1/bibliothecaires/"),
+      apiAdmin.get("/v1/admins/"),
+      apiLecteur.get("/v1/lecteurs/"),
+      apiBiblio.get("/v1/bibliothecaires/"),
     ]);
 
-    const admins: User[] = adminsRes.data.map((a) => ({
-  id: a.id_admin,   // ✅ correspond au type Admin
-  nom: a.nom ?? "",
-  prenom: a.prenom ?? "",
-  email: a.email ?? "",
-  role: "ADMIN",
-  date_naissance: a.date_naissance ?? "",
-  created_at: a.created_at ?? "",
-}));
+    const mapAdmin = adminsRes.data
+      .filter((a: any) => a.userId)
+      .map((a: any) => ({
+        id: a.userId,
+        nom: a.nom,
+        prenom: a.prenom,
+        email: a.email,
+        role: "ADMIN" as const,
+        created_at: a.created_at,
+        date_naissance: a.date_naissance,
+      }));
 
-const biblios: User[] = bibliosRes.data.map((b) => ({
-  id: b.id_bibliothecaire,
-  nom: b.nom ?? "",
-  prenom: b.prenom ?? "",
-  email: b.email ?? "",
-  role: "BIBLIOTHECAIRE",
-  date_naissance: b.date_naissance ?? "",
-  created_at: b.created_at ?? "",
-}));
+    const mapBiblio = bibliosRes.data
+      .filter((b: any) => b.userId)
+      .map((b: any) => ({
+        id: b.userId,
+        nom: b.nom,
+        prenom: b.prenom,
+        email: b.email,
+        role: "BIBLIOTHECAIRE" as const,
+        created_at: b.created_at,
+        date_naissance: b.date_naissance,
+      }));
 
-const lecteurs: User[] = lecteursRes.data.map((l) => ({
-  id: l.id_lecteur,
-  nom: l.nom ?? "",
-  prenom: l.prenom ?? "",
-  email: l.email ?? "",
-  role: "LECTEUR",
-  date_naissance: l.date_naissance ?? "",
-  created_at: l.created_at ?? "",
-}));
+    const mapLecteur = lecteursRes.data
+      .filter((l: any) => l.userId)
+      .map((l: any) => ({
+        id: l.userId,
+        nom: l.nom,
+        prenom: l.prenom,
+        email: l.email,
+        role: "LECTEUR" as const,
+        created_at: l.created_at,
+        date_naissance: l.date_naissance,
+      }));
 
-
-    return [...admins, ...biblios, ...lecteurs].filter(u => u.id); 
-    // 🔹 supprime uniquement les utilisateurs sans ID du tout
+    return [...mapAdmin, ...mapBiblio, ...mapLecteur];
   },
+
+  getUserById: async (
+  id: string,
+  role: "ADMIN" | "BIBLIOTHECAIRE" | "LECTEUR"
+) => {
+  switch (role) {
+    case "ADMIN": {
+      const res = await apiAdmin.get(`/v1/admins/${id}`);
+      return { ...res.data, id: res.data.userId, role: "ADMIN" };
+    }
+    case "BIBLIOTHECAIRE": {
+      const res = await apiBiblio.get(`/v1/bibliothecaires/${id}`);
+      return { ...res.data, id: res.data.userId, role: "BIBLIOTHECAIRE" };
+    }
+    case "LECTEUR": {
+      const res = await apiLecteur.get(`/v1/lecteurs/${id}`);
+      return { ...res.data, id: res.data.userId, role: "LECTEUR" };
+    }
+    default:
+      throw new Error("Rôle invalide");
+  }
+},
+
 
   createUser: async (data: CreateUserDTO) => {
     switch (data.role) {
@@ -89,9 +113,15 @@ const lecteurs: User[] = lecteursRes.data.map((l) => ({
     password?: string;
   }) => {
     switch (payload.oldRole) {
-      case "ADMIN": await apiAdmin.delete(`/v1/admins/${payload.id}`); break;
-      case "BIBLIOTHECAIRE": await apiBiblio.delete(`/v1/bibliothecaires/${payload.id}`); break;
-      case "LECTEUR": await apiLecteur.delete(`/v1/lecteurs/${payload.id}`); break;
+      case "ADMIN":
+        await apiAdmin.delete(`/v1/admins/${payload.id}`);
+        break;
+      case "BIBLIOTHECAIRE":
+        await apiBiblio.delete(`/v1/bibliothecaires/${payload.id}`);
+        break;
+      case "LECTEUR":
+        await apiLecteur.delete(`/v1/lecteurs/${payload.id}`);
+        break;
     }
 
     return AdminAPI.createUser({
@@ -104,21 +134,16 @@ const lecteurs: User[] = lecteursRes.data.map((l) => ({
     });
   },
 
-  getUserById: async (id: string, role: "ADMIN" | "BIBLIOTHECAIRE" | "LECTEUR") => {
-    switch (role) {
-      case "ADMIN": { const res = await apiAdmin.get(`/v1/admins/${id}`); return { ...res.data, role: "ADMIN" }; }
-      case "BIBLIOTHECAIRE": { const res = await apiBiblio.get(`/v1/bibliothecaires/${id}`); return { ...res.data, role: "BIBLIOTHECAIRE" }; }
-      case "LECTEUR": { const res = await apiLecteur.get(`/v1/lecteurs/${id}`); return { ...res.data, role: "LECTEUR" }; }
-      default: throw new Error("Rôle invalide");
-    }
-  },
-
   deleteUser: async (id: string, role: "ADMIN" | "BIBLIOTHECAIRE" | "LECTEUR") => {
     switch (role) {
-      case "ADMIN": return apiAdmin.delete(`/v1/admins/${id}`);
-      case "BIBLIOTHECAIRE": return apiBiblio.delete(`/v1/bibliothecaires/${id}`);
-      case "LECTEUR": return apiLecteur.delete(`/v1/lecteurs/${id}`);
-      default: throw new Error("Rôle invalide");
+      case "ADMIN":
+        return apiAdmin.delete(`/v1/admins/${id}`);
+      case "BIBLIOTHECAIRE":
+        return apiBiblio.delete(`/v1/bibliothecaires/${id}`);
+      case "LECTEUR":
+        return apiLecteur.delete(`/v1/lecteurs/${id}`);
+      default:
+        throw new Error("Rôle invalide");
     }
   },
 };
