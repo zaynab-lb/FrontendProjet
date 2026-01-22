@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback  } from "react";
 import { PretAPI } from "../../api/pret.api";
 import { Prete } from "../../types/Pret";
 import { useAuth } from "../../auth/AuthContext";
@@ -11,25 +11,26 @@ const MesDemandes = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const fetchDemandes = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      if (!user) return;
-      
-      const data = await PretAPI.getDemandesLecteur();
-      setDemandes(data);
-    } catch (err: any) {
-      console.error("Erreur lors de la récupération :", err);
-      setError("Impossible de charger vos demandes");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetchDemandes = useCallback(async () => {
+  try {
+    setLoading(true);
+    setError(null);
+    if (!user) return;
+
+    const data = await PretAPI.getDemandesLecteur();
+    setDemandes(data);
+  } catch (err: any) {
+    console.error("Erreur lors de la récupération :", err);
+    setError("Impossible de charger vos demandes");
+  } finally {
+    setLoading(false);
+  }
+}, [user]);
+
 
   useEffect(() => {
     fetchDemandes();
-  }, [user]);
+  }, [user, fetchDemandes]);
 
   const annuler = async (idPret?: number) => {
     if (!idPret) return;

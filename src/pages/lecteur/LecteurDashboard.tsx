@@ -495,7 +495,7 @@ const LecteurDashboard = () => {
                 return (
                   <Link
                     key={book.idLivre}
-                    to={`/livre/${book.idLivre}`}
+                    to={`/livres/${book.idLivre}`}
                     style={{
                       backgroundColor: 'rgba(255, 251, 245, 0.08)',
                       borderRadius: '18px',
